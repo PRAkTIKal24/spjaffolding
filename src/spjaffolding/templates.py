@@ -29,11 +29,14 @@ def generate_pyproject_toml(
     if "viz" in features:
         toml += 'viz = ["matplotlib", "seaborn"]\n'
 
-    toml += textwrap.dedent("""\
+    toml += textwrap.dedent(f"""\
         
         [build-system]
         requires = ["hatchling"]
         build-backend = "hatchling.build"
+
+        [tool.hatch.build.targets.wheel]
+        packages = ["src/{tool_name}"]
     """)
     return toml
 
