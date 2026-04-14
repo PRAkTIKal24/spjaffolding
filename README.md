@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19570386.svg)](https://doi.org/10.5281/zenodo.19570386)
 ![GitHub Release-date](https://img.shields.io/github/release-date-pre/PRAkTIKal24/spjaffolding?style=flat&color=blue)
 ![Release-version](https://img.shields.io/github/v/tag/PRAkTIKal24/spjaffolding?include_prereleases&label=latest%20release&color=blue)
 ![GitHub repo size](https://img.shields.io/github/repo-size/PRAkTIKal24/spjaffolding)
