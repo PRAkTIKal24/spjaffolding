@@ -1,7 +1,16 @@
 import subprocess
 from pathlib import Path
 
-from spjaffolding.templates import generate_pyproject_toml, generate_cli_py, generate_init_py
+from spjaffolding.templates import (
+    generate_pyproject_toml,
+    generate_cli_py,
+    generate_init_py,
+    generate_config_py,
+    generate_logger_py,
+    generate_env_example,
+    generate_pre_commit_yaml,
+    generate_main_py,
+)
 
 def execute_subprocess(cmd: list[str], cwd: Path) -> None:
     try:
@@ -42,6 +51,28 @@ def orchestrate_generation(tool_name: str, description: str, project_domain: str
     cli_path = src_dir / "cli.py"
     with open(cli_path, "w", encoding="utf-8") as f:
         f.write(generate_cli_py(tool_name))
+
+    # New files: __main__.py, config.py, logger.py
+    main_path = src_dir / "__main__.py"
+    with open(main_path, "w", encoding="utf-8") as f:
+        f.write(generate_main_py(tool_name))
+
+    config_path = src_dir / "config.py"
+    with open(config_path, "w", encoding="utf-8") as f:
+        f.write(generate_config_py())
+
+    logger_path = src_dir / "logger.py"
+    with open(logger_path, "w", encoding="utf-8") as f:
+        f.write(generate_logger_py())
+
+    # Root files: .env.example, .pre-commit-config.yaml
+    env_example_path = project_path / ".env.example"
+    with open(env_example_path, "w", encoding="utf-8") as f:
+        f.write(generate_env_example())
+
+    pre_commit_path = project_path / ".pre-commit-config.yaml"
+    with open(pre_commit_path, "w", encoding="utf-8") as f:
+        f.write(generate_pre_commit_yaml())
 
     # Condition on `project_domain`
     if project_domain == "numerical_ml":
