@@ -10,7 +10,7 @@ By leveraging Python's `Typer`, `rich`, `questionary` and dynamic programmatic s
 - **Interactive Multi-Select CLI**: Uses a beautiful macOS-native-looking, `rich`-styled checkbox interface (via `questionary`) to let users dynamically toggle specifically the modules they need.
 - **Dynamic Feature Architecture**: Additive folder structures and `pyproject.toml` dependencies based on your selections:
   - `gpu`, `viz`, `data_prep`, `model_training`, `scraping`, `vector_db`, `llm_orchestration`.
-- **Reusable Presets**: Easily load preconfigured bundles like `--preset numerical_ml` or `--preset llm_scraping`. Save your own custom selections to `~/.config/spjaffolding/presets.json` for future runs.
+- **Reusable Presets**: Easily load preconfigured bundles like `--preset numerical_ml` or `--preset llm_scraping`. Save your own custom selections to `~/.config/spjaffolding/presets.json` for future runs, and view them anytime using `--list-presets`.
 - **Mode-Driven CLI Controller**: Generates a boilerplate script integrating an argparse/Typer Finite State Machine (FSM), natively supporting sequential chained execution (e.g., `-m prepare_train_evaluate`).
 - **`uv` Environment Orchestration**: Subprocess execution of `uv init` and `uv sync` locally bypasses pip dependency hell with uncompromised lockfile reproducibility. Injecting strict dependency clusters like `gpu`, `viz`, and `test` based on PEP 621/735.
 
@@ -23,6 +23,12 @@ uv tool install . --force
 ```
 
 ## Quick Start
+
+To view all available predefined and custom presets, formatted beautifully in your terminal:
+
+```bash
+spjaffold --list-presets
+```
 
 Invoke the scaffolding wizard to use the interactive checkbox menu:
 
