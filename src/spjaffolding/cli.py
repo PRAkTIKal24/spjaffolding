@@ -5,6 +5,7 @@ import typer
 import questionary
 from questionary import Style
 from rich.console import Console
+from rich.table import Table
 from spjaffolding.generator import orchestrate_generation
 
 app = typer.Typer(
@@ -94,15 +95,56 @@ def save_preset(name: str, features: list[str]) -> None:
 
 @app.command()
 def main(
-    tool_name: str = typer.Option(..., prompt="tool_name (e.g., bead, phaze)"),
-    description: str = typer.Option(..., prompt="description"),
+    tool_name: str = typer.Option(
+        None, help="The name of the tool to scaffold (e.g., bead, phaze)"
+    ),
+    description: str = typer.Option(None, help="Description of the tool"),
     preset: Optional[str] = typer.Option(
         None,
         help="A predefined preset. If omitted, opens the interactive multi-select menu.",
     ),
+    list_presets: bool = typer.Option(
+        False,
+        "--list-presets",
+        help="View all available presets and their features, then exit.",
+    ),
 ) -> None:
     """Entry point for scaffolding."""
     presets = load_presets()
+
+    if list_presets:
+        table = Table(
+            title="Available spjaffolding Presets",
+            show_header=True,
+            header_style="bold magenta",
+        )
+        table.add_column("Preset", style="cyan", width=15)
+        table.add_column("Features (Enabled)", style="green")
+
+        # Build mapping of feature value to title string from AVAILABLE_FEATURES
+        feature_map = {
+            feat.value: feat.title.split(" (")[0] for feat in AVAILABLE_FEATURES
+        }
+
+        for name, feats in presets.items():
+            if not feats:
+                table.add_row(name, "None")
+                continue
+
+            bullets = []
+            for f in feats:
+                bullets.append(f"• {feature_map.get(f, f)}")
+
+            table.add_row(name, "\n".join(bullets))
+
+        console.print(table)
+        raise typer.Exit(code=0)
+
+    if tool_name is None:
+        tool_name = typer.prompt("tool_name (e.g., bead, phaze)")
+    if description is None:
+        description = typer.prompt("description")
+
     selected_features = []
 
     if preset:
