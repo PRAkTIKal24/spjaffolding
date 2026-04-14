@@ -11,7 +11,7 @@ def test_generator_numerical_ml(tmp_path: Path):
     orchestrate_generation(
         tool_name=tool_name,
         description="A mathematical ML tool",
-        project_domain="numerical_ml",
+        features=["gpu", "viz", "data_prep", "model_training"],
         output_dir=tmp_path,
     )
 
@@ -41,7 +41,7 @@ def test_generator_llm_scraping(tmp_path: Path):
     orchestrate_generation(
         tool_name=tool_name,
         description="An LLM scraping tool",
-        project_domain="llm_scraping",
+        features=["scraping", "vector_db", "llm_orchestration"],
         output_dir=tmp_path,
     )
 
@@ -68,7 +68,7 @@ def test_generated_project_compliance(tmp_path: Path):
     orchestrate_generation(
         tool_name=tool_name,
         description="Must pass strictly typed checks",
-        project_domain="numerical_ml",
+        features=["gpu", "viz", "data_prep", "model_training"],
         output_dir=tmp_path,
     )
 
@@ -93,7 +93,7 @@ def test_generated_cli_fsm(tmp_path: Path):
     orchestrate_generation(
         tool_name=tool_name,
         description="Test FSM mode chaining",
-        project_domain="numerical_ml",
+        features=["gpu", "viz", "data_prep", "model_training"],
         output_dir=tmp_path,
     )
     
@@ -116,8 +116,42 @@ def test_generated_cli_fsm(tmp_path: Path):
         assert "Executing mode: train" in result.stdout
         
         # Verify the target footprint inside workspaces
-        target_ws: Path = proj_dir / "workspaces" / "default_workspace" / "default_proj"
+        target_ws = proj_dir / "workspaces" / "default_workspace" / "default_proj"
         assert target_ws.exists() and target_ws.is_dir()
         
     except subprocess.CalledProcessError as e:
         pytest.fail(f"FSM CLI execution failed.\n{e.stderr}")
+
+def test_generator_custom_composition(tmp_path: Path):
+    """Test custom composition of features."""
+    tool_name = "custom_tool"
+    orchestrate_generation(
+        tool_name=tool_name,
+        description="Custom combination",
+        features=["data_prep", "llm_orchestration"],
+        output_dir=tmp_path,
+    )
+
+    proj_dir = tmp_path / tool_name
+    src_dir = proj_dir / "src" / tool_name
+
+    assert proj_dir.exists()
+    assert (src_dir / "data_prep").exists()
+    assert (src_dir / "llm_orchestration").exists()
+    assert not (src_dir / "scraping").exists()
+    assert not (src_dir / "models").exists()
+
+def test_preset_saving(tmp_path: Path, monkeypatch):
+    """Test saving and loading custom presets."""
+    from spjaffolding import cli
+    import json
+    import os
+
+    # Mock Path.home() so config goes to tmp_path
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    
+    cli.save_preset("custom_preset", ["gpu", "viz"])
+    
+    presets = cli.load_presets()
+    assert "custom_preset" in presets
+    assert presets["custom_preset"] == ["gpu", "viz"]
