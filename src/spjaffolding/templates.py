@@ -1,7 +1,9 @@
 import textwrap
 
 
-def generate_pyproject_toml(tool_name: str, description: str, features: list[str]) -> str:
+def generate_pyproject_toml(
+    tool_name: str, description: str, features: list[str]
+) -> str:
     """Generates the modified pyproject.toml adhering to PEP 621/735."""
     toml = textwrap.dedent(f"""\
         [project]

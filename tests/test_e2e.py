@@ -95,7 +95,9 @@ def test_generated_project_compliance(tmp_path: Path):
             capture_output=True,
         )
     except subprocess.CalledProcessError as e:
-        pytest.fail(f"Mypy check failed on generated code.\n{e.stdout.decode()}")
+        pytest.fail(
+            f"Mypy check failed on generated code.\n{e.stdout.decode()}"
+        )
 
 
 def test_generated_cli_fsm(tmp_path: Path):
@@ -136,7 +138,9 @@ def test_generated_cli_fsm(tmp_path: Path):
         assert "Executing mode: train" in result.stdout
 
         # Verify the target footprint inside workspaces
-        target_ws = proj_dir / "workspaces" / "default_workspace" / "default_proj"
+        target_ws = (
+            proj_dir / "workspaces" / "default_workspace" / "default_proj"
+        )
         assert target_ws.exists() and target_ws.is_dir()
 
     except subprocess.CalledProcessError as e:
