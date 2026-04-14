@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "spjaffolding"
-version = "0.1.3"
+version = "0.1.4"
 description = "Produces rigorous advanced machine learning frameworks natively bypassing jinja"
 readme = "README.md"
 authors = [
