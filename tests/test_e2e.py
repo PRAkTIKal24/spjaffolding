@@ -20,9 +20,14 @@ def test_generator_numerical_ml(tmp_path: Path):
 
     assert proj_dir.exists()
     assert (proj_dir / "pyproject.toml").exists()
+    assert (proj_dir / ".env.example").exists()
+    assert (proj_dir / ".pre-commit-config.yaml").exists()
     assert (proj_dir / "workspaces").exists()
     assert (src_dir / "__init__.py").exists()
+    assert (src_dir / "__main__.py").exists()
     assert (src_dir / "cli.py").exists()
+    assert (src_dir / "config.py").exists()
+    assert (src_dir / "logger.py").exists()
 
     # Domain specific folders
     assert (src_dir / "data_prep").exists()
@@ -44,7 +49,12 @@ def test_generator_llm_scraping(tmp_path: Path):
     src_dir = proj_dir / "src" / tool_name
 
     assert proj_dir.exists()
+    assert (proj_dir / ".env.example").exists()
+    assert (proj_dir / ".pre-commit-config.yaml").exists()
     assert (proj_dir / "workspaces").exists()
+    assert (src_dir / "__main__.py").exists()
+    assert (src_dir / "config.py").exists()
+    assert (src_dir / "logger.py").exists()
 
     # Domain specific folders
     assert (src_dir / "scraping").exists()

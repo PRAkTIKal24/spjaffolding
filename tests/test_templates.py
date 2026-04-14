@@ -16,3 +16,32 @@ def test_generate_cli_py():
 def test_generate_init_py():
     init = generate_init_py()
     assert init == ""
+
+from spjaffolding.templates import (
+    generate_config_py,
+    generate_logger_py,
+    generate_env_example,
+    generate_pre_commit_yaml,
+    generate_main_py,
+)
+
+def test_generate_config_py():
+    config = generate_config_py()
+    assert "pydantic_settings" in config
+
+def test_generate_logger_py():
+    logger = generate_logger_py()
+    assert "rich.logging" in logger
+
+def test_generate_env_example():
+    env = generate_env_example()
+    assert "APP_NAME" in env
+
+def test_generate_pre_commit_yaml():
+    pc = generate_pre_commit_yaml()
+    assert "ruff" in pc
+    assert "mypy" in pc
+
+def test_generate_main_py():
+    main = generate_main_py("my_tool")
+    assert "from my_tool.cli import app" in main
