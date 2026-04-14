@@ -14,8 +14,12 @@ from spjaffolding.templates import (
 
 
 def execute_subprocess(cmd: list[str], cwd: Path) -> None:
+    import os
+    env = os.environ.copy()
+    env.pop("VIRTUAL_ENV", None)
+    
     try:
-        subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True)
+        subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True, env=env)
     except subprocess.CalledProcessError as e:
         print(
             f"Subprocess failed: {cmd}\nStdout: {e.stdout}\nStderr: {e.stderr}"
