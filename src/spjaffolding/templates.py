@@ -21,12 +21,12 @@ def generate_pyproject_toml(tool_name: str, description: str, features: list[str
         [project.optional-dependencies]
         test = ["pytest", "ruff", "mypy"]
     """)
-    
+
     if "gpu" in features:
         toml += 'gpu = ["torch", "xgboost"]\n'
     if "viz" in features:
         toml += 'viz = ["matplotlib", "seaborn"]\n'
-    
+
     toml += textwrap.dedent("""\
         
         [build-system]
@@ -49,7 +49,7 @@ def generate_cli_py(tool_name: str, features: list[str]) -> str:
         modes_str.append("embed")
     if "llm_orchestration" in features:
         modes_str.append("generate")
-        
+
     modes_example = "_".join(modes_str) if modes_str else "mode1_mode2"
     modes_help = f"Execution state or chain of states (e.g., {modes_example})"
 
@@ -111,6 +111,7 @@ def generate_init_py() -> str:
     """Generates a blank __init__.py."""
     return ""
 
+
 def generate_config_py() -> str:
     """Generates the pydantic-settings config file."""
     return textwrap.dedent("""\
@@ -124,6 +125,7 @@ def generate_config_py() -> str:
 
         settings = Settings()
     """)
+
 
 def generate_logger_py() -> str:
     """Generates a rich-formatted logger configuration."""
@@ -143,6 +145,7 @@ def generate_logger_py() -> str:
             logger.setLevel(level)
     """)
 
+
 def generate_env_example() -> str:
     """Generates the .env.example file."""
     return textwrap.dedent("""\
@@ -150,6 +153,7 @@ def generate_env_example() -> str:
         APP_NAME="My ML Framework"
         DEBUG=True
     """)
+
 
 def generate_pre_commit_yaml() -> str:
     """Generates the .pre-commit-config.yaml."""
@@ -167,6 +171,7 @@ def generate_pre_commit_yaml() -> str:
             -   id: mypy
                 additional_dependencies: [pydantic]
     """)
+
 
 def generate_main_py(tool_name: str) -> str:
     """Generates a Python execution entry point."""

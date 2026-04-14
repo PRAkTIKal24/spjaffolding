@@ -12,6 +12,7 @@ from spjaffolding.templates import (
     generate_main_py,
 )
 
+
 def execute_subprocess(cmd: list[str], cwd: Path) -> None:
     try:
         subprocess.run(cmd, cwd=cwd, check=True, text=True, capture_output=True)
@@ -19,7 +20,10 @@ def execute_subprocess(cmd: list[str], cwd: Path) -> None:
         print(f"Subprocess failed: {cmd}\nStdout: {e.stdout}\nStderr: {e.stderr}")
         raise
 
-def orchestrate_generation(tool_name: str, description: str, features: list[str], output_dir: Path = None) -> None:
+
+def orchestrate_generation(
+    tool_name: str, description: str, features: list[str], output_dir: Path = None
+) -> None:
     """Executes the complete generation process via un-mocked subprocess workflows."""
     if output_dir is None:
         output_dir = Path.cwd()
@@ -39,7 +43,7 @@ def orchestrate_generation(tool_name: str, description: str, features: list[str]
     # Step 3: Taxonomy generation / Hierarchy structural layout
     src_dir = project_path / "src" / tool_name
     src_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Initialize workspace structure
     workspace_dir = project_path / "workspaces"
     workspace_dir.mkdir(parents=True, exist_ok=True)
@@ -88,7 +92,7 @@ def orchestrate_generation(tool_name: str, description: str, features: list[str]
         (src_dir / "vector_db").mkdir(parents=True, exist_ok=True)
     if "llm_orchestration" in features:
         (src_dir / "llm_orchestration").mkdir(parents=True, exist_ok=True)
-        
+
     # Create a dummy README.md for hatchling build system
     readme_path = project_path / "README.md"
     with open(readme_path, "w", encoding="utf-8") as f:

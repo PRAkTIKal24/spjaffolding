@@ -1,4 +1,3 @@
-import os
 import subprocess
 import pytest
 from pathlib import Path
@@ -76,13 +75,25 @@ def test_generated_project_compliance(tmp_path: Path):
 
     # Validate syntax via ruff
     try:
-        subprocess.run(["uv", "run", "--extra", "test", "ruff", "check", "src"], cwd=proj_dir, check=True, capture_output=True)
+        subprocess.run(
+            ["uv", "run", "--extra", "test", "ruff", "check", "src"],
+            cwd=proj_dir,
+            check=True,
+            capture_output=True,
+        )
     except subprocess.CalledProcessError as e:
-        pytest.fail(f"Ruff check failed on generated code.\nSTDOUT: {e.stdout.decode()}\nSTDERR: {e.stderr.decode()}")
+        pytest.fail(
+            f"Ruff check failed on generated code.\nSTDOUT: {e.stdout.decode()}\nSTDERR: {e.stderr.decode()}"
+        )
 
     # Validate typing via mypy
     try:
-        subprocess.run(["uv", "run", "--extra", "test", "mypy", "src"], cwd=proj_dir, check=True, capture_output=True)
+        subprocess.run(
+            ["uv", "run", "--extra", "test", "mypy", "src"],
+            cwd=proj_dir,
+            check=True,
+            capture_output=True,
+        )
     except subprocess.CalledProcessError as e:
         pytest.fail(f"Mypy check failed on generated code.\n{e.stdout.decode()}")
 
@@ -96,31 +107,41 @@ def test_generated_cli_fsm(tmp_path: Path):
         features=["gpu", "viz", "data_prep", "model_training"],
         output_dir=tmp_path,
     )
-    
+
     proj_dir = tmp_path / tool_name
 
     # Execute the compiled CLI via `uv run`
     try:
         # Pass modes and the workspace project path
         result = subprocess.run(
-            ["uv", "run", tool_name, "-m", "convertcsv_prepareinputs_train", "-p", "default_workspace", "default_proj"],
+            [
+                "uv",
+                "run",
+                tool_name,
+                "-m",
+                "convertcsv_prepareinputs_train",
+                "-p",
+                "default_workspace",
+                "default_proj",
+            ],
             cwd=proj_dir,
             check=True,
             capture_output=True,
-            text=True
+            text=True,
         )
-        
+
         # It should print 3 mode executions based on our CLI template separated by '_'
         assert "Executing mode: convertcsv" in result.stdout
         assert "Executing mode: prepareinputs" in result.stdout
         assert "Executing mode: train" in result.stdout
-        
+
         # Verify the target footprint inside workspaces
         target_ws = proj_dir / "workspaces" / "default_workspace" / "default_proj"
         assert target_ws.exists() and target_ws.is_dir()
-        
+
     except subprocess.CalledProcessError as e:
         pytest.fail(f"FSM CLI execution failed.\n{e.stderr}")
+
 
 def test_generator_custom_composition(tmp_path: Path):
     """Test custom composition of features."""
@@ -141,17 +162,16 @@ def test_generator_custom_composition(tmp_path: Path):
     assert not (src_dir / "scraping").exists()
     assert not (src_dir / "models").exists()
 
+
 def test_preset_saving(tmp_path: Path, monkeypatch):
     """Test saving and loading custom presets."""
     from spjaffolding import cli
-    import json
-    import os
 
     # Mock Path.home() so config goes to tmp_path
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
-    
+
     cli.save_preset("custom_preset", ["gpu", "viz"])
-    
+
     presets = cli.load_presets()
     assert "custom_preset" in presets
     assert presets["custom_preset"] == ["gpu", "viz"]

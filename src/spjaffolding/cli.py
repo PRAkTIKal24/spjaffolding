@@ -22,16 +22,21 @@ AVAILABLE_FEATURES = [
     questionary.Choice("🧠 Model Training (creates models/ & training/)", value="model_training"),
     questionary.Choice("🕸️  Web Scraping (creates scraping/)", value="scraping"),
     questionary.Choice("🗄️  Vector Database / RAG (creates vector_db/)", value="vector_db"),
-    questionary.Choice("🤖 LLM Orchestration (creates llm_orchestration/)", value="llm_orchestration"),
+    questionary.Choice(
+        "🤖 LLM Orchestration (creates llm_orchestration/)", value="llm_orchestration"
+    ),
 ]
 
-CUSTOM_STYLE = Style([
-    ("qmark", "fg:#00ff00 bold"),
-    ("question", "bold"),
-    ("answer", "fg:#00ff00 bold"),
-    ("pointer", "fg:#00ff00 bold"),
-    ("selected", "fg:#0000ff bold"),
-])
+CUSTOM_STYLE = Style(
+    [
+        ("qmark", "fg:#00ff00 bold"),
+        ("question", "bold"),
+        ("answer", "fg:#00ff00 bold"),
+        ("pointer", "fg:#00ff00 bold"),
+        ("selected", "fg:#0000ff bold"),
+    ]
+)
+
 
 def load_presets() -> dict[str, list[str]]:
     presets = dict(DEFAULT_PRESETS)
@@ -46,11 +51,12 @@ def load_presets() -> dict[str, list[str]]:
             console.print(f"[bold red]Failed to load custom presets: {e}[/bold red]")
     return presets
 
+
 def save_preset(name: str, features: list[str]) -> None:
     config_dir = Path.home() / ".config" / "spjaffolding"
     config_dir.mkdir(parents=True, exist_ok=True)
     presets_file = config_dir / "presets.json"
-    
+
     presets = {}
     if presets_file.exists():
         try:
@@ -58,7 +64,7 @@ def save_preset(name: str, features: list[str]) -> None:
                 presets = json.load(f)
         except Exception:
             pass
-            
+
     presets[name] = features
     try:
         with open(presets_file, "w") as f:
@@ -66,6 +72,7 @@ def save_preset(name: str, features: list[str]) -> None:
         console.print(f"[bold green]Saved preset '{name}' to {presets_file}.[/bold green]")
     except Exception as e:
         console.print(f"[bold red]Failed to save preset: {e}[/bold red]")
+
 
 @app.command()
 def main(
@@ -82,7 +89,9 @@ def main(
 
     if preset:
         if preset not in presets:
-            console.print(f"[bold red]Error: Preset '{preset}' not found. Available: {list(presets.keys())}[/bold red]")
+            console.print(
+                f"[bold red]Error: Preset '{preset}' not found. Available: {list(presets.keys())}[/bold red]"
+            )
             raise typer.Exit(code=1)
         selected_features = presets[preset]
         console.print(f"[bold blue]Using preset '{preset}': {selected_features}[/bold blue]")
@@ -90,35 +99,34 @@ def main(
         selected_features = questionary.checkbox(
             "Select the features to include in your project:",
             choices=AVAILABLE_FEATURES,
-            style=CUSTOM_STYLE
+            style=CUSTOM_STYLE,
         ).ask()
-        
+
         if selected_features is None:
             console.print("[yellow]Scaffolding aborted by user.[/yellow]")
             raise typer.Exit(code=0)
-            
+
         if selected_features:
             save_it = questionary.confirm(
-                "Save this selection as a new preset?",
-                default=False,
-                style=CUSTOM_STYLE
+                "Save this selection as a new preset?", default=False, style=CUSTOM_STYLE
             ).ask()
             if save_it:
-                preset_name = questionary.text("Enter a name for the new preset:", style=CUSTOM_STYLE).ask()
+                preset_name = questionary.text(
+                    "Enter a name for the new preset:", style=CUSTOM_STYLE
+                ).ask()
                 if preset_name:
                     save_preset(preset_name, selected_features)
 
     console.print(f"[bold green]Starting scaffolding for: {tool_name}[/bold green]")
     try:
         orchestrate_generation(
-            tool_name=tool_name,
-            description=description,
-            features=selected_features
+            tool_name=tool_name, description=description, features=selected_features
         )
         console.print(f"[bold blue]Successfully scaffolded {tool_name}![/bold blue]")
     except Exception as e:
         console.print(f"[bold red]Generation encountered an error: {e}[/bold red]")
         raise typer.Exit(code=1)
+
 
 if __name__ == "__main__":
     app()
