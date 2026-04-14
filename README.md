@@ -1,3 +1,14 @@
+![GitHub Release-date](https://img.shields.io/github/release-date-pre/PRAkTIKal24/spjaffolding?style=flat&color=blue)
+![Release-version](https://img.shields.io/github/v/tag/PRAkTIKal24/spjaffolding?include_prereleases&label=latest%20release&color=blue)
+![GitHub repo size](https://img.shields.io/github/repo-size/PRAkTIKal24/spjaffolding)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![GitHub forks](https://img.shields.io/github/forks/PRAkTIKal24/spjaffolding?style=flat&color=blue)
+
+[![Tests](https://github.com/PRAkTIKal24/spjaffolding/actions/workflows/tests.yml/badge.svg?event=push)](https://github.com/PRAkTIKal24/spjaffolding/actions)
+[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+
+
 # spjaffolding
 
 A fast, strictly-typed Python CLI application that scaffolds advanced, highly modular Machine Learning frameworks. Designed for Principal Software Engineers and Research teams who demand robust architecture without the pollution of traditional templating engines (like Jinja). 
