@@ -1,9 +1,9 @@
 import textwrap
 
 
-def generate_pyproject_toml(tool_name: str, description: str) -> str:
+def generate_pyproject_toml(tool_name: str, description: str, features: list[str]) -> str:
     """Generates the modified pyproject.toml adhering to PEP 621/735."""
-    return textwrap.dedent(f"""\
+    toml = textwrap.dedent(f"""\
         [project]
         name = "{tool_name}"
         version = "0.1.0"
@@ -19,18 +19,40 @@ def generate_pyproject_toml(tool_name: str, description: str) -> str:
         {tool_name} = "{tool_name}.cli:app"
 
         [project.optional-dependencies]
-        gpu = ["torch", "xgboost"]
-        viz = ["matplotlib", "seaborn"]
         test = ["pytest", "ruff", "mypy"]
+    """)
+    
+    if "gpu" in features:
+        toml += 'gpu = ["torch", "xgboost"]\n'
+    if "viz" in features:
+        toml += 'viz = ["matplotlib", "seaborn"]\n'
+    
+    toml += textwrap.dedent("""\
         
         [build-system]
         requires = ["hatchling"]
         build-backend = "hatchling.build"
     """)
+    return toml
 
 
-def generate_cli_py(tool_name: str) -> str:
+def generate_cli_py(tool_name: str, features: list[str]) -> str:
     """Generates the main entry point leveraging argparse/typer for mode chaining."""
+    modes_str = []
+    if "data_prep" in features:
+        modes_str.append("prepare")
+    if "model_training" in features:
+        modes_str.append("train")
+    if "scraping" in features:
+        modes_str.append("scrape")
+    if "vector_db" in features:
+        modes_str.append("embed")
+    if "llm_orchestration" in features:
+        modes_str.append("generate")
+        
+    modes_example = "_".join(modes_str) if modes_str else "mode1_mode2"
+    modes_help = f"Execution state or chain of states (e.g., {modes_example})"
+
     return textwrap.dedent(f"""\
         import argparse
         import logging
@@ -53,7 +75,7 @@ def generate_cli_py(tool_name: str) -> str:
             parser.add_argument(
                 "-m", "--mode",
                 required=True,
-                help="Execution state or chain of states (e.g., convert_csv_prepare_inputs_train)"
+                help="{modes_help}"
             )
             parser.add_argument(
                 "-p", "--project-path",
