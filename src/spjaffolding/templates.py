@@ -30,7 +30,6 @@ def generate_cli_py(tool_name: str) -> str:
     """Generates the main entry point leveraging argparse/typer for mode chaining."""
     return textwrap.dedent(f"""\
         import argparse
-        import sys
         from pathlib import Path
 
         def execute_mode(mode: str, workspace_path: Path, options: str) -> None:
