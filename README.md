@@ -28,8 +28,32 @@ By leveraging Python's `Typer`, `rich`, `questionary` and dynamic programmatic s
 
 ## Installation
 
-You can install `spjaffolding` globally to bootstrap ML projects anywhere on your filesystem using `uv tool`:
+Install `spjaffolding` globally to bootstrap ML projects anywhere on your filesystem using `pip` or `uv`:
 
+> **Note**: If you don't have `uv` installed, you can quickly install it:
+> ```bash
+> curl -LsSf https://astral.sh/uv/install.sh | sh
+> ```
+
+```bash
+pip install spjaffolding
+```
+**Or**
+```
+uv tool install spjaffolding
+```
+
+### Install from source
+
+If you want to install from source or develop the tool:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/PRAkTIKal24/spjaffolding.git
+cd spjaffolding
+```
+
+2. Install using `uv tool`:
 ```bash
 uv tool install . --force
 ```
