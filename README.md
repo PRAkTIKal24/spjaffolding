@@ -70,6 +70,12 @@ spjaffold --list-presets
 Invoke the scaffolding wizard to use the interactive checkbox menu:
 
 ```bash
+spjaffold
+```
+
+Or, if you already know the name of your project and its description, use:
+
+```bash
 spjaffold --tool-name "phaze" --description "High Energy Physics anomaly detector"
 ```
 
